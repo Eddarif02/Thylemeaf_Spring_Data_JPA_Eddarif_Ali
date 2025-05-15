@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un Patient</title>
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.3.5/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="p-4">
+  <h2 class="mb-3">Ajouter un Patient</h2>
+  <form th:action="@{/admin/save}" th:object="${patient}" method="post">
+    <div class="mb-3">
+      <label for="nom" class="form-label">Nom</label>
+      <input type="text" th:field="*{nom}" class="form-control" id="nom" required>
+    </div>
+    <div class="mb-3">
+      <label for="dateNaissance" class="form-label">Date de naissance</label>
+      <input type="date" th:field="*{dateNaissance}" class="form-control" id="dateNaissance" required>
+    </div>
+    <div class="mb-3">
+      <label for="malade" class="form-label">Malade</label>
+      <select th:field="*{malade}" class="form-control" id="malade">
+        <option value="true">Oui</option>
+        <option value="false">Non</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="score" class="form-label">Score</label>
+      <input type="number" th:field="*{score}" class="form-control" id="score" required>
+    </div>
+    <button type="submit" class="btn btn-success">Ajouter</button>
+  </form>
+</div>
+
+</body>
+</html>

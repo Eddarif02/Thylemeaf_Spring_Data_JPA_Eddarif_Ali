@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template1">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Patients</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+<div layout:fragment="content1" class="p-4">
+    <h2 class="mb-3">Liste des Patients</h2>
+
+    <div class="mb-3">
+        <a th:href="@{/admin/add}" class="btn btn-success">
+            <i th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="bi bi-plus-circle"></i> Ajouter un patient
+        </a>
+    </div>
+
+    <form method="get" th:action="@{/user/index}">
+        <label>Keyword</label>
+        <input type="text" name="keyword" th:value="${keyword}">
+        <button type="submit" class="btn btn-info">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Date de naissance</th>
+            <th>Malade</th>
+            <th>Score</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${listPatients}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.nom}"></td>
+            <td th:text="${#dates.format(p.dateNaissance, 'dd/MM/yyyy')}"></td>
+            <td th:text="${p.malade} ? 'Oui' : 'Non'"></td>
+            <td th:text="${p.score}"></td>
+            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a onclick="return confirm('Êtes-vous sûr ?')"
+                   th:href="@{/admin/delete(id=${p.id}, keyword=${keyword}, page=${currentPage})}"
+                   class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i>
+                </a>
+                <a th:href="@{/admin/edit(id=${p.id})}" class="btn btn-warning btn-sm me-1">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:each="p,status : ${pages}">
+                <a th:href="@{/user/index(page=${status.index},keyword=${keyword})}"
+                   th:class="${currentPage==status.index?'btn btn-info ms-1':'btn btn-outline-info'}"
+                   th:text="${status.index + 1}"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
